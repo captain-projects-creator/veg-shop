@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>BuyVegetables — Fresh Grocery</title>
+    <link rel="stylesheet" href="/css/veggy.css" />
+</head>
+<body>
+<header class="site-header" role="banner">
+    <div class="header-inner container">
+        <div class="brand">
+            <div class="logo-circle" aria-hidden="true">V</div>
+            <div>
+                <div class="brand-title">BuyVegetables</div>
+                <div class="brand-sub">Fresh grocery</div>
+            </div>
+        </div>
+
+        <nav class="top-nav" role="navigation" aria-label="Main navigation">
+            <a id="navHome" href="/index.html">Home</a>
+            <a id="popularr" href="#mainn">Products</a>
+            <a id="navAuth" href="/auth.html">Login / Register</a>
+            <a id="navAdmin" href="/admin.html" style="display:none">Admin</a>
+            <!-- navUser created by shop.js -->
+            <button id="cartBtn" class="cart-btn" title="Open cart" aria-expanded="false">Cart <span id="cartCount">0</span></button>
+        </nav>
+    </div>
+</header>
+
+<!-- full-bleed hero background wrapper (spans viewport) -->
+<section class="hero-bg" aria-hidden="false">
+    <!-- keep inner content aligned to container width -->
+    <div class="hero container" role="region" aria-label="Hero">
+        <div class="hero-left">
+            <h1 class="hero-title">We provide <span class="accent">Fresh grocery</span></h1>
+            <p class="lead">Real produce from local farms — hand-picked, packed and delivered fresh to your doorstep.</p>
+            <div class="hero-actions">
+                <a class="btn primary" id="getStarted" href="#categories">Get Started</a>
+                <a class="btn ghost" href="/auth.html">Login / Register</a>
+            </div>
+
+            <ul class="hero-stats" aria-hidden="false">
+                <li><strong>120+</strong><span>Farm partners</span></li>
+                <li><strong>500+</strong><span>Products</span></li>
+                <li><strong>Same-day</strong><span>Delivery</span></li>
+            </ul>
+            <a class="btn-primary" id="view" href="#categories">View Products</a>
+        </div>
+
+        <div class="hero-image" aria-hidden="true" role="img" aria-label="Basket of vegetables"></div>
+    </div>
+</section>
+
+<main id="mainn" class="container main-content" role="main">
+    <section id="categories" class="categories" aria-label="Shop by category">
+        <h2 class="section-title">Shop by Category</h2>
+        <div class="category-list">
+            <button class="pill">🥬 Leafy Greens</button>
+            <button class="pill">🥕 Root Vegetables</button>
+            <button class="pill">🍅 Tomatoes & Peppers</button>
+            <button class="pill">🍎 Fruits</button>
+            <button class="pill">🌿 Herbs</button>
+        </div>
+    </section>
+
+    <section id="popular" class="popular" aria-label="Popular fresh picks">
+        <h2 class="section-title">Popular Fresh Picks</h2>
+        <div id="products" class="product-grid" aria-live="polite">
+            <p class="muted">Loading products…</p>
+        </div>
+        <div class="centered">
+            <button id="btnRefresh" class="btn">Refresh products</button>
+        </div>
+    </section>
+
+    <!-- additional sections omitted for brevity -->
+</main>
+
+<footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+        <div class="footer-col">
+            <strong>BuyVegetables</strong>
+            <p class="muted">Fresh produce delivered to your doorstep.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Links</h4>
+            <ul class="plain">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/admin.html">Admin</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Legal</h4>
+            <ul class="plain">
+                <li><a href="#">Privacy</a></li>
+                <li><a href="#">Terms</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container small center muted">© <span id="year"></span> BuyVegetables — All rights reserved</div>
+</footer>
+
+<!-- Cart drawer (kept simple) -->
+<aside id="cartDrawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-label="Shopping cart">
+    <div class="cart-header">
+        <h3>Your Cart</h3>
+        <button id="closeCart" class="btn small">Close</button>
+    </div>
+    <div id="cartItems" class="cart-items" role="region" aria-live="polite"></div>
+    <div class="cart-footer">
+        <div class="cart-total">Total: <span id="cartTotal">0.00</span></div>
+        <div style="margin-top:8px">
+            <button id="checkoutBtn" class="btn primary">Checkout</button>
+        </div>
+    </div>
+</aside>
+
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="/js/shop.js"></script>
+</body>
+</html>

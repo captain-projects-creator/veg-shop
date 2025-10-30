@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Auth — Vegetable Shop</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <style>
+        body{font-family:system-ui,Arial;margin:0;background:#f7faf7;color:#0b3d2e}
+        .wrap{max-width:980px;margin:36px auto;padding:18px;background:#fff;border-radius:6px;box-shadow:0 6px 20px rgba(0,0,0,.06)}
+        h1{color:#1f7a43;margin:0 0 20px;font-size:34px}
+        .columns{display:flex;gap:48px;align-items:flex-start}
+        .panel{flex:1;min-width:220px}
+        .panel h2{margin:0 0 12px;font-size:20px}
+        label{display:block;margin-bottom:6px;font-size:13px;color:#2b5b45}
+        input[type="text"], input[type="password"], input[type="email"]{
+          width:240px;padding:8px 10px;border:1px solid #ccc;border-radius:3px;margin-bottom:12px;
+          outline:none; transition:box-shadow .12s, border-color .12s;
+        }
+        input:focus{border-color:#4f9e69; box-shadow:0 0 0 3px rgba(79,158,105,0.08)}
+        button{background:#146b3b;color:#fff;border:0;padding:8px 12px;border-radius:4px;cursor:pointer}
+        button.secondary{background:#e4e7e6;color:#0b3d2e;border:1px solid #d1d5d3}
+        .note{font-size:13px;color:#666;margin-top:8px}
+        .message{padding:12px;border-radius:6px;margin-bottom:12px}
+        .message.error{background:#fff0f0;border:1px solid #f1b1b1;color:#6a1111}
+        .message.ok{background:#f0fff6;border:1px solid #bfe9c9;color:#086027}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <h1>Login / Register</h1>
+
+    <!-- statusMessage has aria-live so screenreaders announce it -->
+    <div id="statusMessage" aria-live="polite"></div>
+
+    <div class="columns">
+        <div class="panel">
+            <h2>Login</h2>
+            <label>Username or email
+                <input id="loginUser" type="text" placeholder="username or email" autocomplete="username">
+            </label>
+            <label>Password
+                <input id="loginPass" type="password" placeholder="password" autocomplete="current-password">
+            </label>
+            <div>
+                <button id="btnLogin">Login</button>
+                <button class="secondary" id="btnLoginClear" type="button">Clear</button>
+            </div>
+            <div class="note">If login succeeds you will be redirected to the home page.</div>
+        </div>
+
+        <div class="panel">
+            <h2>Register</h2>
+            <label>Username
+                <input id="regUser" type="text" placeholder="User" autocomplete="username">
+            </label>
+            <label>Email
+                <input id="regEmail" type="email" placeholder="you@example.com" autocomplete="email">
+            </label>
+            <label>Password
+                <input id="regPass" type="password" placeholder="choose a password" autocomplete="new-password">
+            </label>
+            <div>
+                <button id="btnReg">Register</button>
+                <button class="secondary" id="btnRegClear" type="button">Clear</button>
+            </div>
+            <div class="note">If register succeeds you'll be logged in automatically.</div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/auth.js"></script>
+</body>
+</html>

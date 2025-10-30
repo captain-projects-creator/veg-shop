@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Admin — Products</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body{font-family:Arial,Helvetica,sans-serif;padding:24px}
+        label{display:block;margin-top:8px}
+        input,textarea,select{width:100%;padding:8px;margin-top:4px}
+        .row{display:flex;gap:12px}
+        .col{flex:1}
+        .btn{padding:8px 12px;border-radius:6px;cursor:pointer}
+        .card { border:1px solid #eee; padding:12px; border-radius:8px; margin-bottom:12px; background:#fbfff9 }
+        img.thumb { max-width:140px; display:block; margin-bottom:8px; border-radius:8px }
+    </style>
+</head>
+<body>
+<h1>Admin Dashboard — Products</h1>
+
+<form id="productForm">
+    <label>Product ID (for edit) <input name="id" id="id" placeholder="leave blank to create" /></label>
+    <label>Name <input name="name" id="name" required /></label>
+    <label>Description <textarea name="description" id="description" rows="4"></textarea></label>
+    <div class="row">
+        <div class="col"><label>Price <input name="price" id="price" type="number" step="0.01" /></label></div>
+        <div class="col"><label>Stock <input name="stock" id="stock" type="number" /></label></div>
+        <div class="col"><label>Category <input name="category" id="category" /></label></div>
+    </div>
+
+    <label>Image file <input type="file" name="image" id="imageInput" accept="image/*" /></label>
+
+    <div style="margin-top:12px">
+        <button id="saveBtn" class="btn" type="submit">Save</button>
+        <button id="refreshBtn" class="btn" type="button">Refresh</button>
+        <button id="clearBtn" class="btn" type="button">Clear</button>
+    </div>
+</form>
+
+<hr/>
+
+<h2>All products</h2>
+<div id="list"></div>
+
+<script>
+    // helper to add Authorization header if token available
+    async function fetchWithAuth(url, opts = {}) {
+      opts.headers = opts.headers || {};
+      const token = localStorage.getItem('token');
+      if (token) opts.headers['Authorization'] = 'Bearer ' + token;
+      return fetch(url, opts);
+    }
+
+    function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    async function loadAll(){
+      // admin list endpoint
+      const res = await fetchWithAuth('/api/admin/products');
+      if (!res.ok) { document.getElementById('list').textContent = 'Failed to load: ' + res.status; return; }
+      const arr = await res.json();
+      const html = arr.map(p => {
+        const img = p.image ? `<img class="thumb" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}">` : '';
+        return `<div class="card">
+          ${img}
+          <strong>${escapeHtml(p.name)}</strong> (id: ${p.id})<br/>
+          ${escapeHtml(p.description || '')}<br/>
+          ₹ ${p.price || '—'} — stock: ${p.stock || 0}
+          <div style="margin-top:6px">
+            <button onclick="edit(${p.id})">Edit in form</button>
+            <button onclick="removeProduct(${p.id})">Delete</button>
+          </div>
+        </div>`;
+      }).join('');
+      document.getElementById('list').innerHTML = html;
+    }
+
+    async function edit(id) {
+      const res = await fetchWithAuth('/api/products/' + id);
+      if (!res.ok) return alert('Not found');
+      const p = await res.json();
+      document.getElementById('id').value = p.id || '';
+      document.getElementById('name').value = p.name || '';
+      document.getElementById('description').value = p.description || '';
+      document.getElementById('price').value = p.price || '';
+      document.getElementById('stock').value = p.stock || '';
+      document.getElementById('category').value = p.category || '';
+      window.scrollTo(0,0);
+    }
+
+    async function removeProduct(id){
+      if (!confirm('Delete product #' + id + '?')) return;
+      const res = await fetchWithAuth('/api/admin/products/' + id, { method: 'DELETE' });
+      if (res.ok) { loadAll(); alert('Deleted'); } else {
+        alert('Delete failed: ' + res.status);
+      }
+    }
+
+    document.getElementById('productForm').addEventListener('submit', async function(ev){
+      ev.preventDefault();
+      const form = ev.target;
+      const id = form.id.value.trim();
+      const productObj = {
+        name: form.name.value,
+        description: form.description.value,
+        price: form.price.value ? Number(form.price.value) : null,
+        stock: form.stock.value ? Number(form.stock.value) : 0,
+        category: form.category.value || ''
+      };
+
+      const fd = new FormData();
+      fd.append('product', new Blob([JSON.stringify(productObj)], { type: 'application/json' }));
+      const file = document.getElementById('imageInput').files[0];
+      if (file) fd.append('image', file);
+
+      const url = id ? '/api/admin/products/' + id : '/api/admin/products';
+      const method = id ? 'PUT' : 'POST';
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
+
+      const res = await fetch(url, { method, body: fd, headers });
+      if (res.ok) {
+        alert('Saved');
+        form.reset();
+        loadAll();
+      } else {
+        const text = await res.text();
+        alert('Save failed: ' + res.status + ' — ' + text);
+      }
+    });
+
+    document.getElementById('refreshBtn').addEventListener('click', loadAll);
+    document.getElementById('clearBtn').addEventListener('click', () => document.getElementById('productForm').reset());
+
+    // initial load
+    loadAll();
+</script>
+</body>
+</html>
